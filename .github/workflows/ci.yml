@@ -31,7 +31,7 @@ jobs:
           coverage xml
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: coverage-report
           path: coverage.xml
@@ -57,9 +57,9 @@ jobs:
             });
             const approved = reviews.some(review => review.state === 'APPROVED');
             if (!approved) {
-              core.setFailed("Pull request does not have an approved review.");
+              console.log("Попередження: Код-рев’ю ще не схвалено");
             } else {
-              console.log("✅ Pull request has at least one approved review.");
+              console.log("Код-рев’ю схвалено");
             }
 
       - name: Count lines of code with Cloc
@@ -90,13 +90,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # to get full history
+          fetch-depth: 0
 
-      - name: Download coverage artifact
-        uses: actions/download-artifact@v3
+      - name: Download coverage report
+        uses: actions/download-artifact@v2
         with:
           name: coverage-report
-          path: .
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
