@@ -3,8 +3,8 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.main import add_task, list_tasks, tasks
 
+# Setup that runs before each test
 def setup_function():
-    # Очищення списку задач перед кожним тестом
     tasks.clear()
 
 def test_add_valid_task():
