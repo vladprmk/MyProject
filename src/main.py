@@ -1,64 +1,74 @@
-import json
-import os
+tasks = []
 
-TASKS_FILE = "tasks.json"
 
-def load_tasks():
-    if os.path.exists(TASKS_FILE):
-        with open(TASKS_FILE, "r") as f:
-            return json.load(f)
-    return []
+def add_task(title):
+    original_title = title
+    title = title.strip()
 
-def save_tasks(tasks):
-    with open(TASKS_FILE, "w") as f:
-        json.dump(tasks, f, indent=4)
+    if not title:
+        print("Error: Task title cannot be empty.")
+        print(f"Original input was: '{original_title}'")
+        return
 
-def show_menu():
-    print("\nTo-Do Manager")
-    print("1. View tasks")
-    print("2. Add task")
-    print("3. Delete task")
-    print("4. Exit")
+    if len(title) < 3:
+        print("Error: Task title must be at least 3 characters long.")
+        print(f"Provided title: '{title}' has only {len(title)} characters.")
+        return
 
-def view_tasks(tasks):
+    formatted_title = title[0].upper() + title[1:]
+    tasks.append(formatted_title)
+    print(f"Task '{formatted_title}' added successfully.")
+    print(f"Current number of tasks: {len(tasks)}")
+
+
+def list_tasks():
     if not tasks:
-        print("No tasks found.")
-    else:
-        for i, task in enumerate(tasks, start=1):
-            print(f"{i}. {task}")
+        print("No tasks available. You can start by adding a new one.")
+        print("Use option 1 in the menu to add a task.")
+        return
 
-def add_task(tasks):
-    task = input("Enter new task: ")
-    tasks.append(task)
-    print("Task added.")
+    print("Your current tasks:")
+    for i, task in enumerate(tasks, 1):
+        print(f"  {i}. {task}")
+    print(f"Total tasks listed: {len(tasks)}")
 
-def delete_task(tasks):
-    view_tasks(tasks)
-    index = int(input("Enter task number to delete: "))
-    if 1 <= index <= len(tasks):
-        removed = tasks.pop(index - 1)
-        print(f"Removed task: {removed}")
-    else:
-        print("Invalid task number.")
 
-def main():
-    tasks = load_tasks()
-    while True:
-        show_menu()
-        choice = input("Choose an option: ")
-        if choice == "1":
-            view_tasks(tasks)
-        elif choice == "2":
-            add_task(tasks)
-            save_tasks(tasks)
-        elif choice == "3":
-            delete_task(tasks)
-            save_tasks(tasks)
-        elif choice == "4":
-            print("Goodbye!")
-            break
-        else:
-            print("Invalid choice. Please try again.")
+def delete_task(index):
+    print(f"Attempting to delete task at position: {index}")
+    if index < 1:
+        print("Error: Index must be a positive number.")
+        return
+
+    if index > len(tasks):
+        print(f"Error: Only {len(tasks)} tasks available. Cannot delete task {index}.")
+        return
+
+    removed = tasks.pop(index - 1)
+    print(f"Task '{removed}' has been successfully deleted.")
+    print(f"Remaining tasks: {len(tasks)}")
+
+
+def get_task_count():
+    print("Calculating total number of tasks...")
+    count = len(tasks)
+    print(f"Task count is: {count}")
+    return count
+
+
+def get_sorted_tasks():
+    print("Sorting tasks alphabetically...")
+    sorted_list = sorted(tasks)
+    print("Sorted tasks generated.")
+    return sorted_list
+
 
 if __name__ == "__main__":
-    main()
+    actions = {
+        "1": lambda: add_task(input("Enter task title: ")),
+        "2": list_tasks,
+        "3": exit
+    }
+
+    while True:
+        print("\n1. Add task\n2. List tasks\n3. Exit")
+        actions.get(input("Choose an option: "), lambda: print("Invalid option."))()
