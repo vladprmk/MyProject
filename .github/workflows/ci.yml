@@ -30,7 +30,7 @@ jobs:
           coverage run -m pytest
           coverage xml
 
-      - name: Save coverage report
+      - name: Upload coverage report
         uses: actions/upload-artifact@v3
         with:
           name: coverage-report
@@ -57,9 +57,9 @@ jobs:
             });
             const approved = reviews.some(review => review.state === 'APPROVED');
             if (!approved) {
-              console.log("Попередження: Код-рев’ю ще не схвалено");
+              core.setFailed("Pull request does not have an approved review.");
             } else {
-              console.log("Код-рев’ю схвалено");
+              console.log("✅ Pull request has at least one approved review.");
             }
 
       - name: Count lines of code with Cloc
@@ -90,12 +90,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # to get full history
 
-      - name: Download coverage report
+      - name: Download coverage artifact
         uses: actions/download-artifact@v3
         with:
           name: coverage-report
+          path: .
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
