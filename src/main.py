@@ -19,6 +19,13 @@ def list_tasks():
     for i, task in enumerate(tasks, 1):
         print(f"{i}. {task}")
 
+def delete_task(index):
+    try:
+        removed = tasks.pop(index - 1)
+        print(f"Task '{removed}' deleted.")
+    except IndexError:
+        print("Error: Invalid task number.")
+
 if __name__ == "__main__":
     while True:
         print("\n1. Add task\n2. List tasks\n3. Exit")

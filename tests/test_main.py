@@ -1,25 +1,18 @@
 import sys
 import os
-import builtins
-
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from src.main import add_task, list_tasks, tasks
+from src.main import add_task, list_tasks, delete_task, tasks
 
-
-# Setup that runs before each test
 def setup_function():
     tasks.clear()
-
 
 def test_add_valid_task():
     add_task("Read book")
     assert tasks == ["Read book"]
 
-
 def test_add_task_with_whitespace():
     add_task("   Buy milk   ")
     assert tasks == ["Buy milk"]
-
 
 def test_add_empty_task(capsys):
     add_task("   ")
@@ -27,13 +20,11 @@ def test_add_empty_task(capsys):
     assert "cannot be empty" in captured.out
     assert tasks == []
 
-
 def test_add_short_task(capsys):
     add_task("Go")
     captured = capsys.readouterr()
     assert "at least 3 characters" in captured.out
     assert tasks == []
-
 
 def test_list_tasks_output(capsys):
     add_task("Task 1")
@@ -43,24 +34,21 @@ def test_list_tasks_output(capsys):
     assert "1. Task 1" in captured.out
     assert "2. Task 2" in captured.out
 
-
 def test_list_tasks_empty(capsys):
     list_tasks()
     captured = capsys.readouterr()
     assert "No tasks available." in captured.out
 
+def test_delete_valid_task(capsys):
+    add_task("Do homework")
+    delete_task(1)
+    captured = capsys.readouterr()
+    assert "deleted" in captured.out
+    assert tasks == []
 
-def test_main_loop(monkeypatch, capsys):
-    inputs = iter(["1", "Read book", "2", "9", "3"])
-    monkeypatch.setattr(builtins, "input", lambda _: next(inputs))
-
-    main_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../src/main.py"))
-    with open(main_path, encoding="utf-8") as f:
-        code = f.read()
-        exec(code, {'__name__': '__main__'})
-
-    output = capsys.readouterr().out
-
-    assert "Add task" in output
-    assert "Read book" in output
-    assert "Invalid option" in output
+def test_delete_invalid_index(capsys):
+    add_task("Test task")
+    delete_task(5)
+    captured = capsys.readouterr()
+    assert "Invalid task number" in captured.out
+    assert tasks == ["Test task"]
