@@ -1,7 +1,7 @@
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from src.main import add_task, list_tasks, delete_task, tasks, get_task_count
+from src.main import add_task, list_tasks, delete_task, tasks, get_task_count, get_sorted_tasks
 
 # Setup that runs before each test
 def setup_function():
@@ -58,3 +58,10 @@ def test_get_task_count():
     assert get_task_count() == 0
     add_task("Wash dishes")
     assert get_task_count() == 1
+
+def test_get_sorted_tasks():
+    add_task("Write report")
+    add_task("Attend meeting")
+    add_task("Buy coffee")
+    result = get_sorted_tasks()
+    assert result == ["Attend meeting", "Buy coffee", "Write report"]

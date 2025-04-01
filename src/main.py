@@ -28,13 +28,17 @@ def delete_task(index):
 def get_task_count():
     return len(tasks)
 
-def main_loop(input_func=input):
+def get_sorted_tasks():
+    """Return a sorted list of tasks alphabetically."""
+    return sorted(tasks)
+
+if __name__ == "__main__":
     while True:
         print("\n1. Add task\n2. List tasks\n3. Exit")
-        choice = input_func("Choose an option: ")
+        choice = input("Choose an option: ")
 
         if choice == "1":
-            title = input_func("Enter task title: ")
+            title = input("Enter task title: ")
             add_task(title)
         elif choice == "2":
             list_tasks()
@@ -42,6 +46,3 @@ def main_loop(input_func=input):
             break
         else:
             print("Invalid option.")
-
-if __name__ == "__main__":
-    main_loop()
