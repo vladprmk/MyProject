@@ -21,9 +21,10 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-      - name: Run tests
+      - name: Run tests with coverage
         run: |
-          pytest --junitxml=report.xml
+          coverage run -m pytest
+          coverage xml
 
   analysis:
     runs-on: ubuntu-latest
