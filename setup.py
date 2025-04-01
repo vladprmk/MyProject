@@ -10,6 +10,7 @@ setup(
         "pytest>=7.0.0",
         "flake8>=6.0.0",
         "black>=23.0.0",
+        "coverage"
     ],
     python_requires=">=3.6",
 )
