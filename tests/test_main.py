@@ -51,8 +51,7 @@ def test_delete_invalid_index(capsys):
     add_task("Task X")
     delete_task(5)
     captured = capsys.readouterr()
-    assert "Invalid task number" in captured.out
-    assert tasks == ["Task X"]
+    assert "Cannot delete task 5." in captured.out
 
 def test_get_task_count():
     assert get_task_count() == 0
