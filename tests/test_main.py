@@ -1,5 +1,8 @@
 import sys
 import os
+import builtins
+import pytest
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.main import add_task, list_tasks, tasks
 
@@ -39,3 +42,18 @@ def test_list_tasks_empty(capsys):
     list_tasks()
     captured = capsys.readouterr()
     assert "No tasks available." in captured.out
+
+def test_main_flow(monkeypatch, capsys):
+    # Емуляція користувача: додати завдання, показати список, вийти
+    inputs = iter(["1", "Do homework", "2", "3"])
+    monkeypatch.setattr(builtins, "input", lambda _: next(inputs))
+
+    # Запускаємо файл src/main.py як скрипт
+    main_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../src/main.py'))
+    with open(main_path, encoding='utf-8') as f:
+        code = f.read()
+    exec(compile(code, main_path, 'exec'))
+
+    out = capsys.readouterr().out
+    assert "Task 'Do homework' added." in out
+    assert "1. Do homework" in out
