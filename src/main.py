@@ -8,7 +8,6 @@ def add_task(title):
     if len(title) < 3:
         print("Error: Task title must be at least 3 characters long.")
         return
-
     tasks.append(title)
     print(f"Task '{title}' added.")
 
@@ -26,13 +25,16 @@ def delete_task(index):
     except IndexError:
         print("Error: Invalid task number.")
 
-if __name__ == "__main__":
+def get_task_count():
+    return len(tasks)
+
+def main_loop(input_func=input):
     while True:
         print("\n1. Add task\n2. List tasks\n3. Exit")
-        choice = input("Choose an option: ")
+        choice = input_func("Choose an option: ")
 
         if choice == "1":
-            title = input("Enter task title: ")
+            title = input_func("Enter task title: ")
             add_task(title)
         elif choice == "2":
             list_tasks()
@@ -40,3 +42,6 @@ if __name__ == "__main__":
             break
         else:
             print("Invalid option.")
+
+if __name__ == "__main__":
+    main_loop()

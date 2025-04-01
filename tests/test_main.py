@@ -1,8 +1,9 @@
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from src.main import add_task, list_tasks, delete_task, tasks
+from src.main import add_task, list_tasks, delete_task, tasks, get_task_count
 
+# Setup that runs before each test
 def setup_function():
     tasks.clear()
 
@@ -39,16 +40,21 @@ def test_list_tasks_empty(capsys):
     captured = capsys.readouterr()
     assert "No tasks available." in captured.out
 
-def test_delete_valid_task(capsys):
-    add_task("Do homework")
+def test_delete_existing_task(capsys):
+    add_task("Clean room")
     delete_task(1)
     captured = capsys.readouterr()
     assert "deleted" in captured.out
     assert tasks == []
 
 def test_delete_invalid_index(capsys):
-    add_task("Test task")
+    add_task("Task X")
     delete_task(5)
     captured = capsys.readouterr()
     assert "Invalid task number" in captured.out
-    assert tasks == ["Test task"]
+    assert tasks == ["Task X"]
+
+def test_get_task_count():
+    assert get_task_count() == 0
+    add_task("Wash dishes")
+    assert get_task_count() == 1
