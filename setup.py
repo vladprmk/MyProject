@@ -10,6 +10,8 @@ setup(
         "pytest>=7.0.0",
         "flake8>=6.0.0",
         "black>=23.0.0",
+        "coverage",
+        "pytest-cov"
     ],
     python_requires=">=3.6",
 )
